@@ -170,6 +170,11 @@ bind = SUPER SHIFT, B, exec, powerprofilesctl set balanced
    - applies appearance keywords via `appearance.lua`,
    - writes the state file.
 
+Docked, the internal panel stays on as a secondary screen (handy for Discord,
+Spotify or monitoring while gaming). To disable it whenever an external display
+is present instead, set `disable_internal = true` in `config/lua/options.lua`;
+undocking re-enables it automatically.
+
 Manual switching works the same way and survives because the state file is
 only written when a profile is actually applied.
 
@@ -280,7 +285,9 @@ These are provided by Steam Input / gamescope and stay active in both modes.
   to `hyprland.desktop`.
 - **Scaling** — internal panel scale is 1.5 in both modes and external
   monitors use scale 1. Tweak `enable-handheld.lua` /
-  `enable-desktop.lua` monitor lines to taste.
+  `enable-desktop.lua` monitor lines to taste. To drop the internal panel
+  entirely when docked, set `disable_internal = true` in
+  `config/lua/options.lua`.
 
 ## Development order
 

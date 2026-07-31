@@ -7,6 +7,7 @@ local root = paths.setup()
 
 local monitors = require("monitors")
 local appearance = require("appearance")
+local options = require("options")
 
 local function run(cmd)
   os.execute(cmd)
@@ -45,7 +46,11 @@ if #external > 0 then
     run("hyprctl keyword monitor " .. m .. ",preferred,auto,1")
   end
   if internal then
-    run("hyprctl keyword monitor " .. internal .. ",1920x1080,auto,1.5")
+    if options.disable_internal then
+      run("hyprctl keyword monitor " .. internal .. ",disable")
+    else
+      run("hyprctl keyword monitor " .. internal .. ",1920x1080,auto,1.5")
+    end
   end
 elseif internal then
   run("hyprctl keyword monitor " .. internal .. ",preferred,auto,1.5")
