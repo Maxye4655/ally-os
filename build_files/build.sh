@@ -14,7 +14,8 @@ cp -avf /ctx/config /ctx/scripts /ctx/services /ctx/hyprland.conf /etc/skel/.con
 
 # hyprland/hyprlock were retired from Fedora after F42, so on the F43-based
 # Bazzite image they (plus wvkbd) come from COPRs.
-REL=$(rpm -q --qf "%{VERSION}" fedora-release)
+REL=$(. /etc/os-release; printf '%s' "${VERSION_ID%%.*}")
+test -n "$REL" || { echo "!! could not detect Fedora release" >&2; exit 1; }
 curl -fsSL \
   "https://copr.fedorainfracloud.org/coprs/nett00n/hyprland/repo/fedora-${REL}/nett00n-hyprland-fedora-${REL}.repo" \
   -o /etc/yum.repos.d/_copr_nett00n-hyprland.repo
