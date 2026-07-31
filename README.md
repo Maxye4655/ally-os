@@ -18,6 +18,144 @@ Bazzite's controller stack (Steam Input, gamescope, handheld-daemon,
 asusctl, supergfxctl, power-profiles-daemon) is **not** replaced. Only the
 KDE Desktop Mode gets swapped for Hyprland.
 
+## Installing Ally OS
+
+Ally OS ships as a bootable **installer ISO** — a USB drive you boot from
+that installs Ally OS onto your handheld. You don't need any Linux knowledge
+to follow these steps; the installer (Anaconda, the same one Fedora uses)
+does nearly everything for you.
+
+> **Important:** Installing Ally OS **completely erases the internal drive**
+> of the device it's installed on (Windows, SteamOS, games, files — all of
+> it). The installer installs to the first disk it finds. Back up anything
+> you want to keep before you begin.
+
+### 1. What you'll need
+
+- An ASUS ROG Ally X (the image is built for it)
+- A **USB drive, 16 GB or larger** — every file currently on it will be
+  deleted
+- A second computer (Windows, macOS, or Linux) to prepare the USB drive
+- Your handheld plugged in while installing (the install takes a while)
+
+### 2. Back up your current setup
+
+The installer wipes the internal SSD completely, so copy anything important
+off first — save games, documents, photos, Windows activation info. Nothing
+is permanently lost: ASUS provides a factory-recovery / cloud-restore option
+that reinstalls the original system if you ever want to go back.
+
+### 3. Download the ISO
+
+1. Open the repository's **Actions** page:
+   `https://github.com/Maxye4655/ally-os/actions`
+2. In the left sidebar, click **Build disk images**.
+3. Open the **most recent run with a green checkmark** (the run that says
+   _conclusion: success_).
+4. Scroll to the **Artifacts** section at the bottom of the run page and
+   download the artifact (named `artifact`).
+5. Unzip the downloaded file. Inside you'll find the installer `.iso` file
+   (often named `install.iso`) plus a checksum file. You want the `.iso`.
+
+> The ISO is a few gigabytes, so the download may take a while.
+
+### 4. Write the ISO to your USB drive
+
+This erases the USB drive. Follow the instructions for the computer you're
+using.
+
+**From Windows:**
+
+1. Download **Rufus** from https://rufus.ie (the portable version needs no
+   installation).
+2. Insert the USB drive and open Rufus.
+3. Under **Device**, select your USB drive. Under **Boot selection**, click
+   _Select_ and choose the `.iso` file you downloaded.
+4. Leave everything else at its default and click **Start**.
+5. If it asks whether to write in _ISO mode_ or _DD mode_, accept the
+   default. (If the USB drive later fails to boot, redo the write and pick
+   **DD mode** instead.)
+
+Prefer something simpler? **Fedora Media Writer** (search for it on the
+Fedora website) does the same thing with just two clicks: pick your ISO,
+pick the USB drive, click _Write_.
+
+**From macOS:**
+
+1. Download **balenaEtcher** from https://etcher.balena.io and open it.
+2. Click _Flash from file_ and select the `.iso`.
+3. Click _Select target_ and choose your USB drive.
+4. Click **Flash** and wait. macOS asks for your password during this — that
+   is normal.
+
+**From Linux:**
+
+Use **Fedora Media Writer** (package `fedora-media-writer`), **GNOME Disks**
+(menu → _Restore Disk Image_ → select the ISO → _Start Restoring_), or the
+terminal:
+
+```sh
+sudo dd if=/path/to/install.iso of=/dev/sdX bs=4M status=progress
+```
+
+Replace `/dev/sdX` with your USB drive — confirm the device with `lsblk`
+first. Getting this wrong overwrites whichever disk you name, so double-check.
+
+### 5. Boot from the USB drive
+
+1. Power the Ally X **fully off**.
+2. Hold the **Volume Down** button (top edge).
+3. While holding it, press **Power**; keep holding Volume Down until a boot
+   menu appears.
+4. Pick your USB drive from the boot menu (it usually shows as _EFI USB
+   Device_ or with the drive's brand name).
+5. Don't see a boot menu? Hold **Volume Up** while powering on instead to
+   enter the BIOS, open the **Boot** tab, and select the USB drive there.
+
+### 6. Run the installer
+
+1. The USB drive boots straight into the Ally OS installer. It runs **mostly
+   automatically**.
+2. If it shows questions (language, timezone, or _which disk to install
+   to_), the defaults are right — confirm and continue. The default target,
+   your internal SSD, is the correct one.
+3. **Wait.** The installer copies the whole operating system, so allow
+   15–30+ minutes. Keep the handheld plugged in.
+4. When the installer reports it is finished, remove the USB drive and let
+   the device reboot.
+
+> **Tip:** Remove other USB storage (SD cards, extra drives) before
+> installing — the installer targets the first disk it finds.
+
+### 7. First boot
+
+Your Ally X now boots into **Steam Gaming Mode**, exactly like a Steam Deck.
+From there:
+
+- **Exit to Desktop** lands in Hyprland in **handheld mode** — big touch
+  targets, on-screen keyboard, battery-friendly power profile.
+- Plug in a monitor or a keyboard/mouse and it **automatically switches to
+  desktop mode**.
+- See _First boot expectations_ further down for the full rundown.
+
+### Keeping it updated
+
+Ally OS uses the same update model as Bazzite and SteamOS (bootc/ostree):
+
+- Updates are **applied automatically in the background**; they take effect
+  on the next reboot. You can also update manually with
+  `sudo bootc upgrade`.
+- If an update misbehaves, **roll back** to the previous version — on the
+  boot menu, pick the older deployment, or run `sudo bootc rollback`.
+- To leave Ally OS entirely, reinstall the original system using ASUS's
+  factory-recovery (cloud restore) option.
+
+### Getting help
+
+- The _Troubleshooting_ section below covers common problems.
+- For anything else, open an issue in this repository with a short
+  description of what happened and what you saw on screen.
+
 ## Architecture
 
 ```
@@ -114,7 +252,12 @@ system_files/
 - `power-profiles-daemon` (`powerprofilesctl`) for per-mode power profiles
 - Optional: `ryzenadj` for the TDP cycle button
 
-## Install
+## Manual setup (tinkerers only)
+
+Regular users install the operating system with the ISO from
+[_Installing Ally OS_](#installing-ally-os) above. The steps below are only
+for deploying this repo's config files onto an already-running Ally OS /
+Bazzite install.
 
 Deploy the repo contents to `~/.config/hypr/` (the image does this for you
 via `/etc/skel`):
