@@ -155,8 +155,8 @@ bind = SUPER SHIFT, B, exec, powerprofilesctl set balanced
 ## How it works
 
 1. `hypr-profile-switch.service` runs `detect-mode.lua --watch`.
-2. The watcher blocks on `hyprctl events -m` (via `timeout`, so it also
-   re-checks every 10 s), then calls `main.apply()`.
+2. The watcher blocks on Hyprland's event socket (`hyprctl events -m`,
+   zero idle CPU) and reapplies on `monitoradded` / `monitorremoved`.
 3. `main.detect()` checks `hyprctl monitors -j` for a non-internal output and
    `libinput list-devices` for a real keyboard.
 4. If the detected mode differs from the last applied one (stored in

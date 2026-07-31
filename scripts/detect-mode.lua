@@ -11,32 +11,31 @@ local function sleep(sec)
   os.execute("sleep " .. sec)
 end
 
-local function hyprctl_ok()
-  local p = io.popen("hyprctl monitors >/dev/null 2>&1")
-  if not p then return false end
-  local ok = p:close()
-  return ok == 0 or ok == true
-end
-
-local function watch(interval)
-  while true do
-    if hyprctl_ok() then
-      local p = io.popen("timeout " .. interval .. " hyprctl events -m 2>/dev/null")
-      if p then
-        p:read("*l")
-        p:close()
-      else
-        sleep(interval)
-      end
-    else
-      sleep(interval)
-    end
+local function apply_on_event(line)
+  local ev = line:match("^(%w+)>>")
+  if ev == "monitoradded" or ev == "monitorremoved" then
     main.apply()
   end
 end
 
+local function watch()
+  main.apply()
+  while true do
+    local p = io.popen("hyprctl events -m 2>/dev/null", "r")
+    if p then
+      while true do
+        local line = p:read("*l")
+        if not line then break end
+        apply_on_event(line)
+      end
+      p:close()
+    end
+    sleep(2)
+  end
+end
+
 if arg and arg[1] == "--watch" then
-  watch(10)
+  watch()
 else
   main.apply()
 end
