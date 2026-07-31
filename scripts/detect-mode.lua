@@ -34,8 +34,29 @@ local function watch()
   end
 end
 
+local function udev_watch()
+  main.apply()
+  while true do
+    local p = io.popen("udevadm monitor --subsystem-match=input 2>/dev/null", "r")
+    if p then
+      while true do
+        local line = p:read("*l")
+        if not line then break end
+        local action = line:match("^UDEV%s+%[%d+%.%d+%]%s+(%w+)") or ""
+        if action == "add" or action == "remove" or action == "bind" or action == "unbind" then
+          main.apply()
+        end
+      end
+      p:close()
+    end
+    sleep(2)
+  end
+end
+
 if arg and arg[1] == "--watch" then
   watch()
+elseif arg and arg[1] == "--udev-watch" then
+  udev_watch()
 else
   main.apply()
 end

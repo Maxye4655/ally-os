@@ -39,7 +39,7 @@ if ! dnf5 install -y ryzenadj; then
 fi
 
 ### Enable the adaptive profile switcher for every user
-systemctl --global enable hypr-profile-switch.service
+systemctl --global enable hypr-profile-switch.service hypr-profile-udev.service
 
 ### Point the deck's desktop session at Hyprland instead of Plasma
 #

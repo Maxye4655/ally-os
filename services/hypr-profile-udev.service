@@ -1,0 +1,13 @@
+[Unit]
+Description=Adaptive Hyprland input watcher (udev)
+Documentation=file://%h/.config/hypr/README.md
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/lua %h/.config/hypr/scripts/detect-mode.lua --udev-watch
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

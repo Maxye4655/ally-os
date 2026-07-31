@@ -1,1 +1,2 @@
 enable hypr-profile-switch.service
+enable hypr-profile-udev.service

@@ -22,22 +22,25 @@ KDE Desktop Mode gets swapped for Hyprland.
 ROG Ally X
 |
 ├── Internal display only
-│   Detect: no HDMI/USB-C monitor, controller present, no keyboard/mouse
+│   Detect: no external monitor; keyboard-only stays handheld by default
 │   └── Handheld profile
 │
 └── External display detected
-    Detect: HDMI connected, USB-C display connected, keyboard/mouse available
+    Detect: HDMI/USB-C display, or keyboard + mouse
     └── Desktop profile
 ```
 
 ### Mode detection priority
 
 1. External monitor detected? -> **desktop**
-2. Keyboard detected? -> **desktop**
-3. Controller detected? -> **handheld**
+2. Keyboard and mouse present? -> **desktop**
+3. Keyboard only? -> `keyboard_only_mode` in `config/lua/options.lua`
+   (default **handheld** — a compact Bluetooth keyboard shouldn't force the
+   desktop UI)
 4. Default -> **handheld**
 
-Detection is implemented in `config/lua/main.lua` (`main.detect()`).
+Detection is implemented in `config/lua/main.lua` (`main.detect()`). A
+controller on its own never switches modes.
 
 ## Layout
 
@@ -48,7 +51,8 @@ hypr-adaptive/
 │   │   ├── main.lua          entry: loads modules, detects state, applies profile
 │   │   ├── profiles.lua      profile registry / dispatcher
 │   │   ├── monitors.lua      hyprctl monitor discovery (external/internal)
-│   │   ├── input.lua         libinput-based keyboard/touchscreen/controller detection
+│   │   ├── input.lua         libinput-based keyboard/mouse/touchscreen/controller detection
+│   │   ├── options.lua       user-facing toggles (disable_internal, keyboard_only_mode)
 │   │   └── appearance.lua    hyprctl appearance keywords per profile
 │   ├── handheld/
 │   │   ├── waybar.jsonc      big-touch-button status bar
@@ -60,14 +64,15 @@ hypr-adaptive/
 │       └── launcher.lua
 ├── scripts/
 │   ├── paths.lua             package-root resolution (shared helper)
-│   ├── detect-mode.lua       CLI entry: apply once, or --watch for auto-switch
+│   ├── detect-mode.lua       CLI entry: apply once, --watch (Hyprland) or --udev-watch
 │   ├── switch-profile.lua    manual override: `lua switch-profile.lua handheld`
 │   ├── launcher.lua          mode-aware launcher keybind dispatcher
 │   ├── enable-handheld.lua   apply handheld profile
 │   ├── enable-desktop.lua    apply desktop profile
 │   └── read-sensor.lua       waybar sensor modules (cpu/gpu/fan/tdp)
 ├── services/
-│   └── hypr-profile-switch.service
+│   ├── hypr-profile-switch.service   monitor-event watcher
+│   └── hypr-profile-udev.service     udev input-event watcher
 ├── hyprland.conf             base Hyprland config (deployed to ~/.config/hypr/)
 ├── Containerfile             Bazzite custom-image build (base: bazzite-deck)
 ├── build_files/
@@ -89,7 +94,8 @@ system_files/
 ├── usr/share/wayland-sessions/
 │   └── hyprland.desktop      SDDM/steamos-manager session entry
 ├── usr/lib/systemd/user/
-│   └── hypr-profile-switch.service
+│   ├── hypr-profile-switch.service
+│   └── hypr-profile-udev.service
 └── usr/lib/systemd/user-preset/
     └── 50-hypr-adaptive.preset
 ```
@@ -154,14 +160,20 @@ bind = SUPER SHIFT, B, exec, powerprofilesctl set balanced
 
 ## How it works
 
-1. `hypr-profile-switch.service` runs `detect-mode.lua --watch`.
-2. The watcher blocks on Hyprland's event socket (`hyprctl events -m`,
-   zero idle CPU) and reapplies on `monitoradded` / `monitorremoved`.
-3. `main.detect()` checks `hyprctl monitors -j` for a non-internal output and
-   `libinput list-devices` for a real keyboard.
+1. Two watchers run as user services — `hypr-profile-switch.service`
+   (`detect-mode.lua --watch`) and `hypr-profile-udev.service`
+   (`detect-mode.lua --udev-watch`). Both block on an event source with no
+   polling: Hyprland's socket (`hyprctl events -m`) and `udevadm monitor`
+   (input devices) respectively.
+2. A switch is triggered by a `monitoradded`/`monitorremoved` Hyprland event
+   or by a keyboard/mouse/controller udev add/remove/bind/unbind.
+3. `main.detect()` evaluates the topology — `hyprctl monitors -j` for a
+   non-internal output, `libinput list-devices` for a real keyboard and mouse —
+   and returns the target mode.
 4. If the detected mode differs from the last applied one (stored in
    `~/.local/state/hypr-adaptive/mode`), `switch-profile.lua` runs the
-   matching `enable-*.lua` script, which:
+   matching `enable-*.lua` script (serialized by a lock so the two watchers
+   never apply concurrently), which:
    - restarts Waybar with the profile's config/CSS,
    - starts/stops `squeekboard` (handheld on / desktop off),
    - sets the power profile (`power-saver` handheld, `balanced` desktop),
@@ -174,6 +186,9 @@ Docked, the internal panel stays on as a secondary screen (handy for Discord,
 Spotify or monitoring while gaming). To disable it whenever an external display
 is present instead, set `disable_internal = true` in `config/lua/options.lua`;
 undocking re-enables it automatically.
+
+To make a lone keyboard force desktop mode, set `keyboard_only_mode = "desktop"`
+in the same file.
 
 Manual switching works the same way and survives because the state file is
 only written when a profile is actually applied.

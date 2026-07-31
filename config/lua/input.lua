@@ -49,6 +49,23 @@ function M.has_keyboard()
   return fallback:match("/dev/input/") ~= nil
 end
 
+local function real_mouse(name)
+  return name and not name:find("Touch", 1, true)
+    and not name:find("TrackPoint", 1, true)
+    and not name:find("Synaptics", 1, true)
+    and not name:find("ALPS", 1, true)
+    and not name:find("ELAN", 1, true)
+end
+
+function M.has_mouse()
+  for _, d in ipairs(devices()) do
+    if real(d.name) and d.caps.pointer and real_mouse(d.name) then
+      return true
+    end
+  end
+  return false
+end
+
 function M.has_touchscreen()
   for _, d in ipairs(devices()) do
     if d.caps.touch and not d.name:find("Touchpad", 1, true) then
