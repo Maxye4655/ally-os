@@ -13,12 +13,15 @@ cp -avf /ctx/config /ctx/scripts /ctx/services /ctx/hyprland.conf /etc/skel/.con
 ### Install packages
 
 # hyprland/hyprlock were retired from Fedora after F42, so on the F43-based
-# Bazzite image they (plus wvkbd) come from COPRs.
+# Bazzite image they (plus wvkbd) come from COPRs. We use ashbuk's
+# Hyprland-Fedora COPR (self-contained, vendored libs) instead of nett00n's,
+# whose hyprland-0.55.4 needs libaquamarine.so.11/libhyprutils.so.12 the repo
+# does not provide.
 REL=$(. /etc/os-release; printf '%s' "${VERSION_ID%%.*}")
 test -n "$REL" || { echo "!! could not detect Fedora release" >&2; exit 1; }
 curl -fsSL \
-  "https://copr.fedorainfracloud.org/coprs/nett00n/hyprland/repo/fedora-${REL}/nett00n-hyprland-fedora-${REL}.repo" \
-  -o /etc/yum.repos.d/_copr_nett00n-hyprland.repo
+  "https://copr.fedorainfracloud.org/coprs/ashbuk/Hyprland-Fedora/repo/fedora-${REL}/ashbuk-Hyprland-Fedora-fedora-${REL}.repo" \
+  -o /etc/yum.repos.d/_copr_ashbuk-hyprland.repo
 curl -fsSL \
   "https://copr.fedorainfracloud.org/coprs/fed500/wvkbd/repo/fedora-${REL}/fed500-wvkbd-fedora-${REL}.repo" \
   -o /etc/yum.repos.d/_copr_fed500-wvkbd.repo
