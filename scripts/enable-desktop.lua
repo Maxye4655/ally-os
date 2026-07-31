@@ -32,7 +32,7 @@ end
 
 restart_waybar(root .. "/config/desktop/waybar.jsonc", root .. "/config/desktop/waybar.css")
 
-run("systemctl --user stop squeekboard")
+run("systemctl --user stop wvkbd")
 
 if os.execute("command -v powerprofilesctl >/dev/null 2>&1") then
   run("powerprofilesctl set balanced")

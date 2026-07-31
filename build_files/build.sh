@@ -12,6 +12,16 @@ cp -avf /ctx/config /ctx/scripts /ctx/services /ctx/hyprland.conf /etc/skel/.con
 
 ### Install packages
 
+# hyprland/hyprlock were retired from Fedora after F42, so on the F43-based
+# Bazzite image they (plus wvkbd) come from COPRs.
+REL=$(rpm -q --qf "%{VERSION}" fedora-release)
+curl -fsSL \
+  "https://copr.fedorainfracloud.org/coprs/nett00n/hyprland/repo/fedora-${REL}/nett00n-hyprland-fedora-${REL}.repo" \
+  -o /etc/yum.repos.d/_copr_nett00n-hyprland.repo
+curl -fsSL \
+  "https://copr.fedorainfracloud.org/coprs/fed500/wvkbd/repo/fedora-${REL}/fed500-wvkbd-fedora-${REL}.repo" \
+  -o /etc/yum.repos.d/_copr_fed500-wvkbd.repo
+
 # Packages can be installed from any enabled yum repo on the image.
 # RPMfusion repos are available by default in ublue main images
 # List of rpmfusion packages can be found here:
@@ -21,7 +31,7 @@ dnf5 install -y \
     hyprland \
     waybar \
     lua \
-    squeekboard \
+    wvkbd \
     rofi-wayland \
     brightnessctl \
     libinput \

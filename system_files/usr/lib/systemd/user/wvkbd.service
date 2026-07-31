@@ -1,0 +1,9 @@
+[Unit]
+Description=wvkbd virtual keyboard (handheld mode)
+
+[Service]
+ExecStart=/usr/bin/wvkbd-mobintl
+KillMode=mixed
+
+[Install]
+WantedBy=graphical-session.target

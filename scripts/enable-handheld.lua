@@ -31,7 +31,7 @@ end
 
 restart_waybar(root .. "/config/handheld/waybar.jsonc", root .. "/config/handheld/waybar.css")
 
-run("systemctl --user start squeekboard")
+run("systemctl --user start wvkbd")
 
 if os.execute("command -v powerprofilesctl >/dev/null 2>&1") then
   run("powerprofilesctl set power-saver")

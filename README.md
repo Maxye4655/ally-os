@@ -106,7 +106,7 @@ system_files/
 
 - `hyprland`, `waybar`
 - `lua` (5.2+; Fedora/Bazzite ships 5.4)
-- `squeekboard` (virtual keyboard; needs the wlr virtual-keyboard protocol,
+- `wvkbd` (virtual keyboard; uses the wlr virtual-keyboard protocol,
   which Hyprland supports)
 - `rofi` or `wofi` (launcher)
 - `libinput` tools (`libinput list-devices` for input detection)
@@ -177,7 +177,7 @@ bind = SUPER SHIFT, B, exec, powerprofilesctl set balanced
    matching `enable-*.lua` script (serialized by a lock so the two watchers
    never apply concurrently), which:
    - restarts Waybar with the profile's config/CSS,
-   - starts/stops `squeekboard` (handheld on / desktop off),
+   - starts/stops `wvkbd` (handheld on / desktop off),
    - sets the power profile (`power-saver` handheld, `balanced` desktop),
    - reconfigures monitors (`external primary,preferred,scale 1`; internal
      `1920x1080,secondary,scale 1.5`),
@@ -228,7 +228,7 @@ What the build does (`build_files/build.sh`):
      launched via `/usr/bin/hyprland-launcher`.
    - `/usr/lib/systemd/user/hypr-profile-switch.service` — the adaptive
      profile switcher, enabled for every user.
-2. Installs Hyprland + friends (`hyprland`, `waybar`, `lua`, `squeekboard`,
+2. Installs Hyprland + friends (`hyprland`, `waybar`, `lua`, `wvkbd`,
    `rofi-wayland`, `brightnessctl`, `libinput`, `kitty`, `grim`, `slurp`,
    `wl-clipboard`, `hyprlock`, `swaybg`, plus optional `ryzenadj` for TDP
    cycling). Plasma remains installed as a fallback session.
@@ -266,7 +266,7 @@ workflow `branches:` lists.
 
 - Boot lands in Steam Gaming Mode (unchanged).
 - "Exit to Desktop" → Hyprland in **handheld** mode (big UI, 36 px cursor,
-  squeekboard on tap, power-saver profile).
+  wvkbd on screen, power-saver profile).
 - Dock an external monitor / plug a keyboard → auto-switch to **desktop**
   mode.
 - The "Return to Gaming Mode" desktop shortcut works as shipped.
@@ -290,8 +290,8 @@ These are provided by Steam Input / gamescope and stay active in both modes.
 - **Switching loops** — check `~/.local/state/hypr-adaptive/mode`; the
   watcher only applies when the detected mode changes.
 - **Virtual keyboard won't show** — confirm the compositor supports the
-  wlr virtual-keyboard protocol and that `squeekboard` is installed and
-  listed in `systemctl --user list-units`.
+  wlr virtual-keyboard protocol and that `wvkbd` is installed and
+  listed in `systemctl --user list-units` (toggle with Super+P).
 - **`cursor:size` ignored** — set `env = XCURSOR_SIZE,36` for handheld /
   `env = XCURSOR_SIZE,24` for desktop in `hyprland.conf` as a fallback; the
   runtime `hyprctl keyword cursor:size` is applied by `appearance.lua`.

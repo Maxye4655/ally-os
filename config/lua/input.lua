@@ -1,6 +1,6 @@
 local M = {}
 
-local EXCLUDE = { "Virtual", "onboard", "squeekboard", "wacom", "Wayland" }
+local EXCLUDE = { "Virtual", "onboard", "wvkbd", "squeekboard", "wacom", "Wayland" }
 
 local function command(cmd)
   local p = io.popen(cmd, "r")
