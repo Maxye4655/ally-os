@@ -1,9 +1,11 @@
-# hypr-adaptive
+# Ally OS
 
-A custom Hyprland desktop environment for handheld gaming PCs, built for the
-ASUS ROG Ally X running a custom Bazzite image. It dynamically switches
-between two environments, like a modern, correctly-executed Windows 8
-Continuum:
+[![Built on Bazzite](https://img.shields.io/badge/built%20on-Bazzite-%234BB9B0?style=flat&logo=fedora&logoColor=white)](https://bazzite.gg)
+
+**Built on Bazzite.** A custom Hyprland desktop environment for handheld
+gaming PCs, built for the ASUS ROG Ally X running a custom Bazzite image.
+It dynamically switches between two environments, like a modern,
+correctly-executed Windows 8 Continuum:
 
 - **Handheld mode** — portable. Touchscreen and controller first. Large UI,
   big touch targets (>= 48 px), virtual keyboard, touch-friendly launcher,
@@ -45,7 +47,7 @@ controller on its own never switches modes.
 ## Layout
 
 ```
-hypr-adaptive/
+ally-os/
 ├── config/
 │   ├── lua/
 │   │   ├── main.lua          entry: loads modules, detects state, applies profile
@@ -124,7 +126,7 @@ git clone <this-repo> ~/.config/hypr
 or symlink a checkout:
 
 ```sh
-ln -s "$(pwd)/hypr-adaptive" ~/.config/hypr
+ln -s "$(pwd)/ally-os" ~/.config/hypr
 ```
 
 Then copy `hyprland.conf` into place and enable the user service (the
@@ -139,7 +141,7 @@ systemctl --user enable --now hypr-profile-switch
 
 ### hyprland.conf integration
 
-`hypr-adaptive` manages monitor rules, gaps, rounding, cursor size, blur and
+`Ally OS` manages monitor rules, gaps, rounding, cursor size, blur and
 animations at runtime, so keep those out of `hyprland.conf`. A ready-made
 base config ships in this repo (`hyprland.conf`) with the switcher, launcher,
 profile-override and power binds wired up. Key lines:
@@ -244,7 +246,7 @@ What the build does (`build_files/build.sh`):
 
 In CI: push to your repo (default branch `main`) and the
 `.github/workflows/build.yml` workflow builds and publishes
-`ghcr.io/<you>/hypr-adaptive:latest`. Then run the `Build disk images`
+`ghcr.io/<you>/ally-os:latest`. Then run the `Build disk images`
 workflow (`build-disk.yml`) with `platform: amd64` — the `anaconda-iso`
 matrix entry produces an installable ISO.
 

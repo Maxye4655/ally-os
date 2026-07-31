@@ -5,7 +5,7 @@ set -eoux pipefail
 # 1. Lay down image config files (usr/..., etc.)
 cp -avf "/ctx/system_files"/. /
 
-# 2. Deploy hypr-adaptive into the user skeleton so every new user gets a
+# 2. Deploy Ally OS into the user skeleton so every new user gets a
 #    full, editable copy under ~/.config/hypr/.
 mkdir -p /etc/skel/.config/hypr
 cp -avf /ctx/config /ctx/scripts /ctx/services /ctx/hyprland.conf /etc/skel/.config/hypr/

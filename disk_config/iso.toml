@@ -1,10 +1,10 @@
 # Anaconda ISO customization. After installation the image is switched to
-# the custom hypr-adaptive image via `bootc switch`. Update the registry and
+# the custom Ally OS image via `bootc switch`. Update the registry and
 # image name to match your GitHub org / repo (see image-template.env).
 [customizations.installer.kickstart]
 contents = """
 %post
-bootc switch --mutate-in-place --transport registry ghcr.io/maxye4655/hypr-adaptive:latest
+bootc switch --mutate-in-place --transport registry ghcr.io/maxye4655/ally-os:latest
 %end
 """
 

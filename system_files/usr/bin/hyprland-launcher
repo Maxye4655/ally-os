@@ -1,6 +1,6 @@
 #!/bin/bash
 # Launch Hyprland as the deck's desktop session (handheld-first defaults).
-# hypr-adaptive tunes cursor size, monitors, gaps, blur and animations at
+# Ally OS tunes cursor size, monitors, gaps, blur and animations at
 # runtime via config/lua/appearance.lua, so keep runtime-managed settings
 # out of hyprland.conf.
 

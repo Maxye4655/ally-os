@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Hyprland
-Comment=hypr-adaptive Hyprland desktop (handheld/desktop auto-switch)
+Comment=Ally OS Hyprland desktop (handheld/desktop auto-switch)
 Exec=/usr/bin/hyprland-launcher
 TryExec=/usr/bin/hyprland-launcher
 Type=Application
