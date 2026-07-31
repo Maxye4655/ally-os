@@ -1,0 +1,21 @@
+#!/bin/bash
+# Launch Hyprland as the deck's desktop session (handheld-first defaults).
+# hypr-adaptive tunes cursor size, monitors, gaps, blur and animations at
+# runtime via config/lua/appearance.lua, so keep runtime-managed settings
+# out of hyprland.conf.
+
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_DESKTOP=Hyprland
+export XDG_SESSION_TYPE=wayland
+export XCURSOR_SIZE=36
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export MOZ_ENABLE_WAYLAND=1
+export ELECTRON_OZONE_PLATFORM_HINT=auto
+
+# Idempotent: also started from hyprland.conf's exec-once, and enabled as a
+# user service. First start happens before Hyprland is up, which is fine —
+# detect-mode.lua --watch waits until `hyprctl monitors` answers.
+systemctl --user start hypr-profile-switch.service 2>/dev/null || true
+
+exec Hyprland "$@"

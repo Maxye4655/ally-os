@@ -1,0 +1,54 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 36,
+  "spacing": 8,
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right": ["tray", "network", "pulseaudio", "cpu", "memory", "battery"],
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "on-click": "activate",
+    "sort-by-number": true,
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 48,
+  },
+  "clock": {
+    "format": "{:%a %d %b  %H:%M}",
+    "tooltip-format": "{:%A %d %B %Y}",
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 6,
+  },
+  "network": {
+    "format-wifi": "{essid}",
+    "format-ethernet": "Eth",
+    "format-disconnected": "Offline",
+    "tooltip": false,
+  },
+  "pulseaudio": {
+    "format": "{volume}%",
+    "format-muted": "Mute",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+  },
+  "cpu": {
+    "format": "{usage}%",
+    "interval": 5,
+  },
+  "memory": {
+    "format": "{}",
+    "interval": 10,
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15,
+    },
+    "format": "{capacity}%",
+    "format-charging": "{capacity}%",
+    "tooltip": false,
+  },
+}

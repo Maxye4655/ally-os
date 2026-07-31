@@ -1,0 +1,110 @@
+@define-color bg rgba(12, 12, 18, 0.88);
+@define-color fg #f2f2f5;
+@define-color accent #4fa8ff;
+@define-color warn #f5b84f;
+@define-color crit #e5534b;
+
+* {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 17px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+window#waybar {
+  background: @bg;
+  color: @fg;
+  border-radius: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+window#waybar > box {
+  padding: 10px 16px;
+}
+
+#custom-steam,
+#custom-launcher,
+#custom-cpu-temp,
+#custom-gpu-temp,
+#custom-fan,
+#custom-tdp,
+#clock,
+#backlight,
+#pulseaudio,
+#network,
+#bluetooth,
+#battery {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  padding: 12px 18px;
+  margin: 4px 5px;
+  min-height: 44px;
+}
+
+#custom-steam {
+  background: rgba(102, 190, 240, 0.18);
+  color: #7cd4ff;
+  font-weight: bold;
+}
+
+#custom-launcher {
+  background: rgba(79, 168, 255, 0.18);
+  color: #8ec5ff;
+  font-weight: bold;
+}
+
+#custom-cpu-temp,
+#custom-gpu-temp {
+  color: #d7b9ff;
+}
+
+#custom-fan {
+  color: #b9e0a5;
+}
+
+#custom-tdp {
+  color: #ffd479;
+}
+
+#clock {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#battery.warning {
+  color: @warn;
+}
+
+#battery.critical {
+  color: @crit;
+}
+
+#network.disconnected,
+#bluetooth.off {
+  color: #8a8a95;
+}
+
+#custom-steam:hover,
+#custom-launcher:hover,
+#custom-cpu-temp:hover,
+#custom-gpu-temp:hover,
+#custom-fan:hover,
+#custom-tdp:hover,
+#clock:hover,
+#backlight:hover,
+#pulseaudio:hover,
+#network:hover,
+#bluetooth:hover,
+#battery:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+tooltip {
+  background: rgba(12, 12, 18, 0.95);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+}

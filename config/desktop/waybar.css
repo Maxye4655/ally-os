@@ -1,0 +1,69 @@
+@define-color bg rgba(16, 16, 20, 0.92);
+@define-color fg #dddddd;
+@define-color accent #7aa2ff;
+
+* {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 13px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: @bg;
+  color: @fg;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#workspaces button {
+  padding: 0 8px;
+  margin: 0 1px;
+  color: #8a8a95;
+}
+
+#workspaces button.active {
+  color: @accent;
+  background: rgba(122, 162, 255, 0.15);
+}
+
+#workspaces button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#window {
+  padding: 0 10px;
+  color: #aaaaaa;
+}
+
+#clock {
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+#tray,
+#network,
+#pulseaudio,
+#cpu,
+#memory,
+#battery {
+  padding: 0 10px;
+  margin: 0 2px;
+}
+
+#battery.warning {
+  color: #e5c07b;
+}
+
+#battery.critical {
+  color: #e5534b;
+}
+
+#network.disconnected {
+  color: #8a8a95;
+}
+
+#pulseaudio.muted {
+  color: #8a8a95;
+}
