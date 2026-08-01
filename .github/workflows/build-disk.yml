@@ -92,6 +92,7 @@ jobs:
         if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          name: ${{ matrix.disk-type }}-images
           path: ${{ steps.build.outputs.output-directory }}
           if-no-files-found: error
           retention-days: 0
@@ -113,3 +114,40 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rclone
           rclone copy $SOURCE_DIR S3:${{ secrets.S3_BUCKET_NAME }}
+
+  release:
+    name: Publish disk images to Release
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download disk image artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: images
+          pattern: "*-images"
+          merge-multiple: true
+
+      - name: Publish to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd images
+          TAG=iso
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "Ally OS disk images" \
+              --notes "Latest installable ISO and qcow2 disk image, built automatically from the *Build disk images* workflow. See the README for install instructions." \
+              --latest
+          fi
+          for asset in $(gh release view "$TAG" --json assets --jq '.assets[].name'); do
+            gh release delete-asset "$TAG" "$asset" --yes
+          done
+          assets=()
+          for f in *.iso *.qcow2 *.checksum; do
+            [ -f "$f" ] && assets+=("$f")
+          done
+          gh release upload "$TAG" "${assets[@]}" --clobber

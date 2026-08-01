@@ -47,15 +47,21 @@ that reinstalls the original system if you ever want to go back.
 
 ### 3. Download the ISO
 
-1. Open the repository's **Actions** page:
-   `https://github.com/Maxye4655/ally-os/actions`
+1. Open the **Releases** page:
+   `https://github.com/Maxye4655/ally-os/releases/latest`
+2. Under **Assets**, download the file ending in **`.iso`** (usually
+   `install.iso`). No unzipping needed — it's ready to flash.
+
+No release listed (or you want a specific build)? Grab the raw artifact from
+CI instead:
+
+1. Go to the **Actions** page: `https://github.com/Maxye4655/ally-os/actions`
 2. In the left sidebar, click **Build disk images**.
-3. Open the **most recent run with a green checkmark** (the run that says
-   _conclusion: success_).
-4. Scroll to the **Artifacts** section at the bottom of the run page and
-   download the artifact (named `artifact`).
-5. Unzip the downloaded file. Inside you'll find the installer `.iso` file
-   (often named `install.iso`) plus a checksum file. You want the `.iso`.
+3. Open the **most recent run with a green checkmark**.
+4. Scroll to the **Artifacts** section and download the **`anaconda-iso-images`**
+   artifact.
+5. Unzip it — the `.iso` file (often named `install.iso`) is inside, next to
+   a checksum file.
 
 > The ISO is a few gigabytes, so the download may take a while.
 
